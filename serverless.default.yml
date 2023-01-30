@@ -1,0 +1,25 @@
+service: sns-demo
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  timeout: 60
+  memorySize: 256
+  environment: ${file(./env.yml)}
+  region: us-west-2
+  deploymentBucket:
+    name: sns-demo-deploy
+plugins:
+  - serverless-deployment-bucket
+
+functions:
+  producer:
+    handler: producer.handler
+    url: true
+
+  consumer:
+    handler: consumer.handler
+    events:
+      - sns: dispatch
